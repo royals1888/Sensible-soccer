@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Sensible Kick</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; touch-action:none; user-select:none; }
+body {
+  background:#0d0d1a;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  height:100vh; overflow:hidden;
+  font-family:'Courier New',monospace;
+}
+#hud {
+  display:flex; justify-content:space-between; align-items:center;
+  width:100%; max-width:560px; padding:4px 12px;
+  font-size:13px; color:#fff;
+}
+#score { font-size:22px; font-weight:bold; color:#00ffaa; letter-spacing:3px; }
+#timer { color:#ffcc00; font-size:16px; }
+canvas { display:block; border:2px solid #00ffaa44; border-radius:4px; }
+#hint { font-size:11px; color:#888; text-align:center; margin-top:4px; }
+#overlay {
+  position:fixed; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  background:rgba(0,0,0,0.82); color:#fff; z-index:10;
+}
+#overlay h1 { font-size:34px; color:#00ffaa; margin-bottom:10px; letter-spacing:2px; }
+.inst { font-size:13px; color:#bbb; margin:4px 0; text-align:center; max-width:300px; }
+#startBtn {
+  margin-top:22px; padding:13px 36px; font-size:18px; font-weight:bold;
+  background:#00ffaa; color:#000; border:none; border-radius:8px;
+  cursor:pointer; font-family:inherit; letter-spacing:1px;
+}
+</style>
+</head>
+<body>
+<div id="hud">
+  <span style="color:#4488ff;font-weight:bold">YOU</span>
+  <span id="timer" style="color:#ffcc00;font-size:15px">2:00</span>
+  <span id="score">0 - 0</span>
+  <span style="color:#ff5555;font-weight:bold">CPU</span>
+</div>
+<canvas id="c"></canvas>
+<div id="hint">Tap near ball · Swipe to kick · Offset touch for CURL</div>
+
+<div id="overlay">
+  <h1>⚽ SENSIBLE KICK</h1>
+  <p class="inst">📱 <b>Tap</b> near your player to select</p>
+  <p class="inst">👆 <b>Swipe</b> to shoot — release to kick</p>
+  <p class="inst">🌀 Touch <b>left/right of ball</b> for curl!</p>
+  <p class="inst" style="color:#ffcc00;margin-top:8px">Score most goals in 2 minutes!</p>
+  <button id="startBtn">KICK OFF!</button>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
