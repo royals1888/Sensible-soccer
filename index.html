@@ -7,52 +7,103 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; touch-action:none; user-select:none; }
 body {
-  background:#0d0d1a;
+  background: linear-gradient(160deg, #080814 0%, #0c1525 100%);
   display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  height:100vh; overflow:hidden;
-  font-family:'Courier New',monospace;
+  align-items:center; justify-content:flex-start;
+  min-height:100vh; overflow:hidden;
+  font-family: 'Arial', sans-serif;
 }
+
 #hud {
   display:flex; justify-content:space-between; align-items:center;
-  width:100%; max-width:560px; padding:4px 12px;
-  font-size:13px; color:#fff;
+  width:100%; max-width:420px; padding:8px 20px;
+  background: rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-#score { font-size:22px; font-weight:bold; color:#00ffaa; letter-spacing:3px; }
-#timer { color:#ffcc00; font-size:16px; }
-canvas { display:block; border:2px solid #00ffaa44; border-radius:4px; }
-#hint { font-size:11px; color:#888; text-align:center; margin-top:4px; }
+.team-score {
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  min-width:80px;
+}
+.team-name {
+  font-size:10px; font-weight:800; letter-spacing:3px; text-transform:uppercase;
+}
+.team-name.blue { color:#5599ff; }
+.team-name.red  { color:#ff5555; }
+.score-num {
+  font-size:30px; font-weight:900; color:#fff; line-height:1.1;
+}
+#timer-wrap {
+  display:flex; flex-direction:column; align-items:center;
+}
+#timer {
+  font-size:24px; font-weight:700; color:#ffcc00;
+  font-variant-numeric: tabular-nums; line-height:1.1;
+}
+.timer-label { font-size:9px; color:#666; letter-spacing:2px; }
+
+canvas { display:block; }
+
+#hint {
+  font-size:10px; color:#3a3a4a; text-align:center;
+  padding:5px 12px; width:100%; max-width:420px;
+}
+
 #overlay {
   position:fixed; inset:0; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
-  background:rgba(0,0,0,0.82); color:#fff; z-index:10;
+  background: linear-gradient(160deg, rgba(4,4,16,0.96), rgba(8,16,36,0.96));
+  color:#fff; z-index:10;
 }
-#overlay h1 { font-size:34px; color:#00ffaa; margin-bottom:10px; letter-spacing:2px; }
-.inst { font-size:13px; color:#bbb; margin:4px 0; text-align:center; max-width:300px; }
+#overlay h1 {
+  font-size:38px; font-weight:900; color:#00ffaa;
+  margin-bottom:4px; letter-spacing:4px;
+  text-shadow: 0 0 30px rgba(0,255,170,0.45);
+}
+.subtitle { font-size:11px; color:#446; letter-spacing:5px; margin-bottom:28px; }
+.inst {
+  font-size:13px; color:#999; margin:7px 0; text-align:center;
+  max-width:280px; line-height:1.5;
+}
+.inst strong { color:#ddd; }
+.inst.highlight { color:#ffcc00; margin-top:12px; }
 #startBtn {
-  margin-top:22px; padding:13px 36px; font-size:18px; font-weight:bold;
-  background:#00ffaa; color:#000; border:none; border-radius:8px;
-  cursor:pointer; font-family:inherit; letter-spacing:1px;
+  margin-top:20px; padding:15px 52px; font-size:20px; font-weight:900;
+  background: linear-gradient(135deg, #00ffaa, #00cc88);
+  color:#000; border:none; border-radius:14px;
+  cursor:pointer; letter-spacing:2px;
+  box-shadow: 0 4px 24px rgba(0,255,170,0.4);
 }
+#startBtn:active { filter:brightness(0.9); }
+.badge { margin-top:16px; font-size:10px; color:#335; letter-spacing:3px; }
 </style>
 </head>
 <body>
 <div id="hud">
-  <span style="color:#4488ff;font-weight:bold">YOU</span>
-  <span id="timer" style="color:#ffcc00;font-size:15px">2:00</span>
-  <span id="score">0 - 0</span>
-  <span style="color:#ff5555;font-weight:bold">CPU</span>
+  <div class="team-score">
+    <span class="team-name blue">YOU</span>
+    <span class="score-num" id="scoreP">0</span>
+  </div>
+  <div id="timer-wrap">
+    <span id="timer">2:00</span>
+    <span class="timer-label">TIME</span>
+  </div>
+  <div class="team-score" style="align-items:flex-end">
+    <span class="team-name red">CPU</span>
+    <span class="score-num" id="scoreCPU">0</span>
+  </div>
 </div>
 <canvas id="c"></canvas>
-<div id="hint">Tap near ball · Swipe to kick · Offset touch for CURL</div>
+<div id="hint">Tap player · Swipe to kick · Offset touch for curl</div>
 
 <div id="overlay">
-  <h1>⚽ SENSIBLE KICK</h1>
-  <p class="inst">📱 <b>Tap</b> near your player to select</p>
-  <p class="inst">👆 <b>Swipe</b> to shoot — release to kick</p>
-  <p class="inst">🌀 Touch <b>left/right of ball</b> for curl!</p>
-  <p class="inst" style="color:#ffcc00;margin-top:8px">Score most goals in 2 minutes!</p>
-  <button id="startBtn">KICK OFF!</button>
+  <h1>SENSIBLE KICK</h1>
+  <p class="subtitle">5-A-SIDE FOOTBALL</p>
+  <p class="inst"><strong>Tap</strong> a blue player to take control</p>
+  <p class="inst"><strong>Swipe</strong> from the ball to shoot</p>
+  <p class="inst"><strong>Left/right offset</strong> touch adds curl</p>
+  <p class="inst highlight">Yellow arrow = your player</p>
+  <button id="startBtn">KICK OFF</button>
+  <p class="badge">2 MINUTE MATCH · SCORE TO WIN</p>
 </div>
 
 <script src="game.js"></script>
